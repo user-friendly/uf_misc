@@ -50,17 +50,50 @@
         <set_value name="$actor" exact="event.object"/>
         <do_if value="event.param == 'uf_g_removefromsquad'">
           <!-- See also cue OnRemoveFromSquad -->
-          <debug_text text="'UF: %1, removing %3[%2] from commander\'s squad'.[event.param, $actor, $actor.knownname]"/>
+          <debug_text text="'UF: %1, removing %3[%2] from commander\'s squad'.[event.param, $actor, $actor.knownname]" filter="scripts_verbose"/>
 
           <remove_object_commander object="$actor.ship" />
           <start_script name="'command.none'" object="$actor" />
 
-          <!--<add_to_player_squad object="$actor.ship" />
-          <remove_from_player_squad object="$actor.ship" />-->
+          <!--
+            Possible workaround hack.
+            <add_to_player_squad object="$actor.ship" />
+            <remove_from_player_squad object="$actor.ship" />
+          -->
           
         </do_if>
       </actions>
     </cue>
+
+    <!--<cue name="UF_SectionHandler_Broadcast" instantiate="true" namespace="this">
+      <conditions>
+        <check_any>
+          <event_conversation_started convprefix="gOrders_broadcast_" />
+          <event_conversation_next_section sectionprefix="gOrders_broadcast_" />
+          <event_conversation_returned_to_section sectionprefix="gOrders_broadcast_" />
+          <event_conversation_started convprefix="uf_gOrders_broadcast_" />
+          <event_conversation_next_section sectionprefix="uf_gOrders_broadcast_" />
+          <event_conversation_returned_to_section sectionprefix="uf_gOrders_broadcast_" />
+        </check_any>
+      </conditions>
+      <actions>
+        <debug_text text="'UF: Next section: ' + event.param" />
+
+        --><!-- broadcast squad --><!--
+        <do_if value="event.param == 'gOrders_broadcast_main'">
+          --><!-- keep the same structure as in gOrders_main --><!--
+          <do_if value="event.name == 'event_conversation_next_section'">
+            <set_value name="static.$subordinates" exact="event.param2" />
+          </do_if>
+          --><!-- assign new commander --><!--
+          <set_value name="$condition" exact="5" />
+          <include_actions ref="md.Orders.BroadcastHelper" />
+          <add_player_choice_sub text="'{80001, 2} (' + $count + ')'" section="uf_gOrders_broadcast_squadcommander" position="left" comment="Squad commander" selectable="$count gt 0" />
+        </do_if>
+        
+      </actions>
+    </cue>-->
+
   </cues>
   
 </mdscript>

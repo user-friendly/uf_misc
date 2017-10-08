@@ -29,7 +29,7 @@
       <!-- <t id="1058">We await your new orders, Sir.</t> -->
       <start_conversation actor="this" conversation="Speak" type="unqueued" convparam="[1035, 1301, 1058].random" />
       
-      <wait exact="1s"/>
+      <wait exact="5s"/>
 
       <set_to_default_flight_control_model object="this.ship" />
       <!--<stop_moving object="this.ship" />-->

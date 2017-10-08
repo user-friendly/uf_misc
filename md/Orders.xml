@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<diff>
+  <!-- Remove "Join squad". -->
+  <remove sel="//cues/cue[@name='SectionHandler_Broadcast']/actions/do_if[contains(@value, 'gOrders_broadcast_main')]/set_value[@name='$condition' and @exact='4']/following-sibling::include_actions[position()=1]" />
+  <remove sel="//cues/cue[@name='SectionHandler_Broadcast']/actions/do_if[contains(@value, 'gOrders_broadcast_main')]/set_value[@name='$condition' and @exact='4']" />
+  <remove sel="//cues/cue[@name='SectionHandler_Broadcast']/actions/do_if[contains(@value, 'gOrders_broadcast_main')]/add_player_choice_sub[@section='gOrders_broadcast_joinsquad']" />
+
+  <!-- Assign new superior. -->
+  <remove sel="//cues/cue[@name='SectionHandler_Broadcast']/actions/do_if[contains(@value, 'gOrders_broadcast_main')]/set_value[@name='$condition' and @exact='5']/following-sibling::include_actions[position()=1]" />
+  <remove sel="//cues/cue[@name='SectionHandler_Broadcast']/actions/do_if[contains(@value, 'gOrders_broadcast_main')]/set_value[@name='$condition' and @exact='5']" />
+  <remove sel="//cues/cue[@name='SectionHandler_Broadcast']/actions/do_if[contains(@value, 'gOrders_broadcast_main')]/add_player_choice_sub[@section='gOrders_broadcast_assign']" />
+</diff>

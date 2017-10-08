@@ -2,5 +2,6 @@
 <language>
 	<page id="80001" title="UF Misc" desc="Text for UF Misc" voice="no">
 		<t id="1">Leave squad</t>
+    <t id="2">Squad commander</t>
 	</page>
 </language>
