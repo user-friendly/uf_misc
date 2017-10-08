@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content id="uf_misc"
+         name="UA - 'Quality of Life' Pack"
+         description="This expansion will try to change small parts of the game, in order to enchance the gameplay for more experienced players."
+         author="UserFriendly"
+         version="100"
+         date="2017-10-07"
+         save="false"
+         enabled="true"
+>
+  <text language="44" description="This expansion will try to change small parts of the game, in order to enchance the gameplay for more experienced players." />
+  <dependency version="400" />
+  <!-- optional="true": No error if dependency missing/disabled. This is only used to define the loading order of extensions (dependencies are loaded first). -->
+  <dependency id="ego_dlc_2" version="100" optional="true" />
+</content>

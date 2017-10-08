@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<mdscript name="UF_Conversations" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+
+  <cues>
+
+    <cue name="UF_GameLoaded" instantiate="false" namespace="this">
+      <conditions>
+        <event_game_loaded />
+      </conditions>
+      <actions>
+        <debug_text text="'UF: Conversations MD loaded.'"/>
+      </actions>
+    </cue>
+
+    <cue name="UF_DefaultComm" instantiate="true" namespace="this">
+      <conditions>
+        <check_any>
+          <event_conversation_started conversation="default" />
+          <event_conversation_returned_to_section section="default"/>
+        </check_any>
+        <check_any>
+          <check_object object="event.object" entitytype="entitytype.commander" />
+          <check_object object="event.object" entitytype="entitytype.pilot" />
+        </check_any>
+        <!-- The NPC is player owned...? -->
+        <check_value value="event.object.isplayerowned" exact="true" />
+        <check_value value="@event.object.ship.commander" exact="player.primaryship" negate="true" />
+        <check_value value="@event.object.ship.buildmodule.buildanchor" exact="false" />
+        <check_value value="@event.object.ship.canhavecommander.{player.entity}" exact="true" />
+      </conditions>
+      <actions>
+        <set_value name="$actor" exact="event.object"/>
+        
+        <debug_text text="'UF: Staff conversation (not commanding) started: %1, actor=%2, %3'.[event.param, $actor, $actor.knownname]" />
+
+        <!-- TODO Check selectable, instead of always assuming this option is selectable? -->
+        <add_player_choice text="{80001,1}" tooltip="{80001,1}" section="uf_g_removefromsquad" position="left" comment="Leave squad" selectable="true" />
+        
+      </actions>
+    </cue>
+
+    <cue name="UF_SectionHandler" instantiate="true" namespace="this">
+      <conditions>
+        <check_any>
+          <event_conversation_next_section sectionprefix="uf_g_" />
+          <event_conversation_returned_to_section sectionprefix="uf_g_" />
+        </check_any>
+      </conditions>
+      <actions>
+        <set_value name="$actor" exact="event.object"/>
+        <do_if value="event.param == 'uf_g_removefromsquad'">
+          <!-- See also cue OnRemoveFromSquad -->
+          <debug_text text="'UF: %1, removing %3[%2] from commander\'s squad'.[event.param, $actor, $actor.knownname]"/>
+
+          <remove_object_commander object="$actor.ship" />
+          <start_script name="'command.none'" object="$actor" />
+
+          <!--<add_to_player_squad object="$actor.ship" />
+          <remove_from_player_squad object="$actor.ship" />-->
+          
+        </do_if>
+      </actions>
+    </cue>
+  </cues>
+  
+</mdscript>
