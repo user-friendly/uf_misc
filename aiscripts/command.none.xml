@@ -2,41 +2,26 @@
 <!-- TODO No idea what the priority and version should be.  -->
 <aiscript name="command.none" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd"
           priority="2" version="3">
-  <!--
-   Just do nothing
-   by Plamen Ivanov
-   
-   Copied from: 
-  
-   Wrapper script for explicit order to Move and Wait command
-   by Adrian
-  
-  -->
   <params>
     <param name="debugchance" default="0"/>
   </params>
   <attention min="unknown">
     <actions>
       <!--<debug_text text="'just clear commands and do nothing...'" chance="$debugchance" />-->
-      <debug_text text="'just clear commands and do nothing...'" />
+      <debug_text text="'UF: Command %1[%2] to do nothing.'.[this.knownname, @this.ship.knownname]" />
       
-      <!-- Wait for orders -->
-      <set_command command="command.wait"  />
-      <set_command_action commandaction="commandaction.standingby" />
-
+      <set_command command="null"  />
+      <set_command_action commandaction="null" />
+      
       <!-- <t id="1035">(task completed)Task finished, Sir.</t> -->
       <!-- <t id="1301">Awaiting orders.</t> -->
       <!-- <t id="1058">We await your new orders, Sir.</t> -->
       <start_conversation actor="this" conversation="Speak" type="unqueued" convparam="[1035, 1301, 1058].random" />
-      
-      <wait exact="5s"/>
 
-      <set_to_default_flight_control_model object="this.ship" />
-      <!--<stop_moving object="this.ship" />-->
-      <stop_boost object="this.ship" />
-      
+      <debug_text text="'UF: Actor %1, command: %2, commandaction: %3'.[this.knownname, this.command.value, this.commandaction.value]" filter="scripts_verbose"/>
     </actions>
   </attention>
+  <!-- TODO No idea what this does. -->
   <on_abort>
     <do_if value="$withdraw and this.ship.defencenpc.exists">
       <signal_objects object="this.ship.defencenpc" param="'stop attack'" param2="'stop permanent'" comment="Set Hold Fire Mode" />

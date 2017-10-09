@@ -31,7 +31,7 @@
       <actions>
         <set_value name="$actor" exact="event.object"/>
         
-        <debug_text text="'UF: Staff conversation (not commanding) started: %1, actor=%2, %3'.[event.param, $actor, $actor.knownname]" />
+        <debug_text text="'UF: Player NPC staff conversation started: %1, actor=%2[%3]'.[event.param, $actor.knownname, $actor]" filter="scripts_verbose" />
 
         <!-- TODO Check selectable, instead of always assuming this option is selectable? -->
         <add_player_choice text="{80001,1}" tooltip="{80001,1}" section="uf_g_removefromsquad" position="left" comment="Leave squad" selectable="true" />
@@ -47,25 +47,14 @@
         </check_any>
       </conditions>
       <actions>
-        <set_value name="$actor" exact="event.object"/>
         <do_if value="event.param == 'uf_g_removefromsquad'">
-          <!-- See also cue OnRemoveFromSquad -->
-          <debug_text text="'UF: %1, removing %3[%2] from commander\'s squad'.[event.param, $actor, $actor.knownname]" filter="scripts_verbose"/>
-
-          <remove_object_commander object="$actor.ship" />
-          <start_script name="'command.none'" object="$actor" />
-
-          <!--
-            Possible workaround hack.
-            <add_to_player_squad object="$actor.ship" />
-            <remove_from_player_squad object="$actor.ship" />
-          -->
-          
+          <set_value name="$subordinate" exact="event.object.ship"/>
+          <include_actions ref="UF_RemoveFromSquad"/>
         </do_if>
       </actions>
     </cue>
 
-    <!--<cue name="UF_SectionHandler_Broadcast" instantiate="true" namespace="this">
+    <cue name="UF_SectionHandler_Broadcast" instantiate="true" namespace="this">
       <conditions>
         <check_any>
           <event_conversation_started convprefix="gOrders_broadcast_" />
@@ -77,23 +66,122 @@
         </check_any>
       </conditions>
       <actions>
-        <debug_text text="'UF: Next section: ' + event.param" />
-
-        --><!-- broadcast squad --><!--
+        <!-- broadcast squad -->
         <do_if value="event.param == 'gOrders_broadcast_main'">
-          --><!-- keep the same structure as in gOrders_main --><!--
+          <!-- keep the same structure as in gOrders_main -->
           <do_if value="event.name == 'event_conversation_next_section'">
             <set_value name="static.$subordinates" exact="event.param2" />
           </do_if>
-          --><!-- assign new commander --><!--
+          
+          <!-- assign new commander -->
+          <add_player_choice_sub text="{80001, 2}" section="uf_gOrders_broadcast_squadcommander" position="left" comment="Squad commander" />
+        </do_if>
+        <!-- Basically a copy/paste of Orders.xml. -->
+        <do_elseif value="event.param == 'uf_gOrders_broadcast_squadcommander'">
+          <!-- join squad -->
+          <set_value name="$condition" exact="4" />
+          <include_actions ref="md.Orders.BroadcastHelper" />
+          <add_player_choice_sub text="{1002,2009} + ' (' + $count + ')'" tooltip="{1026, 20000}" section="gOrders_broadcast_joinsquad" position="top_left" comment="Join squad" selectable="$count gt 0" />
+          <!-- assign new commander -->
           <set_value name="$condition" exact="5" />
           <include_actions ref="md.Orders.BroadcastHelper" />
-          <add_player_choice_sub text="'{80001, 2} (' + $count + ')'" section="uf_gOrders_broadcast_squadcommander" position="left" comment="Squad commander" selectable="$count gt 0" />
-        </do_if>
-        
-      </actions>
-    </cue>-->
+          <add_player_choice_sub text="{1002,2019} + ' (' + $count + ')'" tooltip="{1026, 20005}" section="gOrders_broadcast_assign" position="left" comment="Assign new superior" selectable="$count gt 0" />
 
+          <!-- Reuse "assign new commander" count -->
+          <set_value name="$condition" exact="6" />
+          <include_actions ref="UF_BroadcastHelper" />
+          <add_player_choice_sub text="{80001,1} + ' (' + $count + ')'" section="uf_gOrders_broadcast_squadcommander_leavesquad" position="bottom_left" comment="Leave squad" selectable="$count gt 0" />
+          
+          <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+        </do_elseif>
+        <do_elseif value="event.param == 'uf_gOrders_broadcast_squadcommander_leavesquad'">
+          <set_value name="$condition" exact="6" />
+          <include_actions ref="UF_BroadcastHelper" />
+          <do_if value="$count gt 0">
+
+            <set_value name="$npclinecount" exact="0" />
+            <set_value name="$stopmode" exact="false" />
+            
+            <create_group groupname="$BroadcastShips" />
+            <do_all exact="static.$subordinates.count" counter="$i">
+              <set_value name="$subordinate" exact="static.$subordinates.{$i}" />
+              <do_if value="not $subordinate.isclass.ship_xs">
+                <do_if value="(not @$subordinate.pilot.$shiptrader_docking) and (not $subordinate.dockslot) and (not $subordinate.docklink) and ($subordinate.pilot.command.value != command.support)">
+                  <add_to_group groupname="$BroadcastShips" object="$subordinate" />
+                </do_if>
+              </do_if>
+            </do_all>
+
+            <signal_objects group="$BroadcastShips" param="'stop order'" delay="100ms" />
+            
+            <do_all exact="$BroadcastShips.count" counter="$i">
+              <do_if value="@$BroadcastShips.{$i}.commander">
+                <set_value name="$subordinate" exact="$BroadcastShips.{$i}" />
+                <include_actions ref="UF_RemoveFromSquad"/>
+              </do_if>
+            </do_all>
+          </do_if>
+          <!-- TODO No idea if block is needed... -->
+          <do_else>
+            <do_if value="$capablefound">
+              <add_npc_line line="17383" comment="All qualified ships are currently busy." />
+            </do_if>
+            <do_else>
+              <add_npc_line line="17382" comment="We currently have no ship capable of doing that." />
+            </do_else>
+          </do_else>
+          
+        </do_elseif>
+      </actions>
+    </cue>
+
+    <library name="UF_RemoveFromSquad">
+      <conditions>
+        <check_any>
+          <check_object object="@$subordinate.controlentity" entitytype="entitytype.pilot" />
+          <check_object object="@$subordinate.controlentity" entitytype="entitytype.commander" />
+        </check_any>
+      </conditions>
+      <actions>
+        <set_value name="$actor" exact="$subordinate.controlentity"/>
+        <debug_text text="'UF: Removing %1[%2] from commander %3[%4]\'s squad'.[$actor.knownname, $subordinate.knownname, @$subordinate.commander.controlentity.knownname, $subordinate.commander.knownname]" filter="scripts_verbose"/>
+
+        <remove_object_commander object="$subordinate" />
+        <!-- TODO Look into <signal_objects group="$BroadcastShips" param="'stop order'" delay="100ms" /> -->
+        <start_script name="'command.none'" object="$actor" />
+        
+        <!--
+          Possible workaround hack.
+          <add_to_player_squad object="$subordinate" />
+          <remove_from_player_squad object="$subordinate" />
+        -->
+      </actions>
+    </library>
+
+    <library name="UF_BroadcastHelper">
+      <actions>
+        <set_value name="$count" exact="0" />
+        <set_value name="$capablefound" exact="false" />
+        <do_all exact="static.$subordinates.count" counter="$i">
+          <set_value name="$subordinate" exact="static.$subordinates.{$i}" />
+          <do_if value="not $subordinate.isclass.ship_xs">
+            <do_if value="@$condition" exact="6">
+              <set_value name="$capablefound" exact="true" />
+              <do_if value="(@$subordinate.commander) and (not @$subordinate.pilot.$shiptrader_docking) and (not $subordinate.dockslot) and (not $subordinate.docklink) and ($subordinate.pilot.command.value != command.support)">
+                <set_value name="$count" operation="add" />
+              </do_if>
+            </do_if>
+            <do_else>
+              <set_value name="$capablefound" exact="true" />
+              <do_if value="(not @$subordinate.pilot.$shiptrader_docking) and (not $subordinate.dockslot) and (not $subordinate.docklink)">
+                <set_value name="$count" operation="add" />
+              </do_if>
+            </do_else>
+          </do_if>
+        </do_all>
+      </actions>
+    </library>
+    
   </cues>
   
 </mdscript>
