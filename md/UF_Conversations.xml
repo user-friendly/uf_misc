@@ -147,14 +147,13 @@
         <debug_text text="'UF: Removing %1[%2] from commander %3[%4]\'s squad'.[$actor.knownname, $subordinate.knownname, @$subordinate.commander.controlentity.knownname, $subordinate.commander.knownname]" filter="scripts_verbose"/>
 
         <remove_object_commander object="$subordinate" />
-        <!-- TODO Look into <signal_objects group="$BroadcastShips" param="'stop order'" delay="100ms" /> -->
-        <start_script name="'command.none'" object="$actor" />
-        
+
         <!--
-          Possible workaround hack.
-          <add_to_player_squad object="$subordinate" />
-          <remove_from_player_squad object="$subordinate" />
+          <signal_objects object="$subordinate" param="'stop order'" delay="100ms" /> 
+          Doesn't seem to quite work, but it is the way. The follow commandaction is not removed.
         -->
+        
+        <start_script name="'command.none'" object="$actor" />
       </actions>
     </library>
 
