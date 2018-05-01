@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mdscript name="UF_NPC_Shiptrader_Small" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
 
-<documentation>
-  This is a test MD file.
-</documentation>
-
 <cues>
-  <!--<cue name="UF_Test_Cue_01" instantiate="true" namespace="this">-->
-    <!--<conditions>-->
-      <!--<check_any>-->
-        <!---->
-      <!--</check_any>-->
-    <!--</conditions>-->
-    <!--<actions>-->
-      <!--<show_notification caption="'Weapon changed to ' + event.param2" />-->
-      <!--<debug_text text="'Weapon changed to yeee' + event.param2" />-->
-      <!--<create_ship />-->
-    <!--</actions>-->
-  <!--</cue>-->
 
   <library name="PilotSetSkills">
     <actions>
