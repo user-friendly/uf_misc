@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon name="uf_detailmonitor" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ui/core/coreaddon.xsd">
+  <environment type="detailmonitor">
+    <file name="ui/addons/uf_detailmonitor/menu_productsales_slider.lua" />
+    <dependency name="ego_detailmonitor" />
+  </environment>
+</addon>

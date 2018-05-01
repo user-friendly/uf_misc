@@ -1,14 +1,18 @@
-<?xml version="1.0" encoding="iso-8859-1" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <mdscript name="UF_Conversations" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
 
   <cues>
 
     <cue name="UF_GameLoaded" instantiate="false" namespace="this">
       <conditions>
-        <event_game_loaded />
+        <check_all>
+          <event_game_loaded />
+        </check_all>
       </conditions>
       <actions>
-        <debug_text text="'UF: Conversations MD loaded.'"/>
+        <do_all>
+          <debug_text text="'UF: Conversations MD loaded.'" />
+        </do_all>
       </actions>
     </cue>
 

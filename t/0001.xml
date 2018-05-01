@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <language>
-	<page id="80001" title="UF Misc" desc="Text for UF Misc" voice="no">
-		<t id="1">Leave squad</t>
+  <page id="80001" title="UF Misc" desc="Text for UF Misc" voice="no">
+    <t id="1">Leave squad</t>
     <t id="2">Squad commander</t>
-	</page>
+    <t id="3">Hire experienced pilots for %s($CREDITS$) each</t>
+    <t id="4">, including pilots</t>
+    <t id="5">Get the higher ranking pilots for a hefty price.</t>
+  </page>
 </language>

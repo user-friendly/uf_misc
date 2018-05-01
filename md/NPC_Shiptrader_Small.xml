@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+  <add sel="/mdscript/cues/cue[@name='Base']/cues/cue[@name='SectionHandler']/actions/do_elseif/do_if[@value='@$rawdocks.count']/do_all[@exact='$amount' and @counter='$i']/do_if[@value='$spawnedship.exists']">
+    <include_actions ref="md.UF_NPC_Shiptrader_Small.PilotSetSkills" />
+  </add>
+
+  <replace sel="/mdscript/cues/cue[@name='Base']/cues/cue[@name='SectionHandler']/actions/do_elseif/open_conversation_menu[@menu='ProductSalesSliderMenu']">
+    <open_conversation_menu menu="UF_ProductSalesSliderMenu" param="event.param2" param2="event.param3" />
+  </replace>
+
+</diff>

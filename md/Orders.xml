@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <diff>
   <!-- Remove "Join squad". -->
   <remove sel="//cues/cue[@name='SectionHandler_Broadcast']/actions/do_if[contains(@value, 'gOrders_broadcast_main')]/set_value[@name='$condition' and @exact='4']/following-sibling::include_actions[position()=1]" />
