@@ -3,6 +3,7 @@
 
   <cues>
 
+    <!-- TODO Find out why this cue is not triggered and remove cue. -->
     <cue name="UF_GameLoaded" instantiate="false" namespace="this">
       <conditions>
         <check_all>
@@ -11,7 +12,7 @@
       </conditions>
       <actions>
         <do_all>
-          <debug_text text="'UF: Conversations MD loaded.'" />
+          <debug_text text="'UF: Conversations MD loaded.'" filter="scripts_verbose" />
         </do_all>
       </actions>
     </cue>
@@ -78,7 +79,7 @@
           </do_if>
           
           <!-- assign new commander -->
-          <add_player_choice_sub text="{80001, 2}" section="uf_gOrders_broadcast_squadcommander" position="left" comment="Squad commander" />
+          <add_player_choice_sub text="{80001,2}" section="uf_gOrders_broadcast_squadcommander" position="left" comment="Squad commander" />
         </do_if>
         <!-- Basically a copy/paste of Orders.xml. -->
         <do_elseif value="event.param == 'uf_gOrders_broadcast_squadcommander'">
@@ -140,24 +141,13 @@
     </cue>
 
     <library name="UF_RemoveFromSquad">
-      <conditions>
-        <check_any>
-          <check_object object="@$subordinate.controlentity" entitytype="entitytype.pilot" />
-          <check_object object="@$subordinate.controlentity" entitytype="entitytype.commander" />
-        </check_any>
-      </conditions>
       <actions>
         <set_value name="$actor" exact="$subordinate.controlentity"/>
-        <debug_text text="'UF: Removing %1[%2] from commander %3[%4]\'s squad'.[$actor.knownname, $subordinate.knownname, @$subordinate.commander.controlentity.knownname, $subordinate.commander.knownname]" filter="scripts_verbose"/>
-
-        <remove_object_commander object="$subordinate" />
-
-        <!--
-          <signal_objects object="$subordinate" param="'stop order'" delay="100ms" /> 
-          Doesn't seem to quite work, but it is the way. The follow commandaction is not removed.
-        -->
-        
-        <start_script name="'command.none'" object="$actor" />
+        <do_if value="$actor.type == entitytype.pilot or $actor.type == entitytype.commander">
+          <debug_text text="'UF: Removing %1[%2] from commander %3[%4]\'s squad'.[$actor.knownname, $subordinate.knownname, @$subordinate.commander.controlentity.knownname, $subordinate.commander.knownname]" filter="scripts_verbose" />
+          <remove_object_commander object="$subordinate" />
+          <start_script name="'command.none'" object="$actor" />
+        </do_if>
       </actions>
     </library>
 

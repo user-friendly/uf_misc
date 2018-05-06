@@ -2,6 +2,7 @@
 <addon name="uf_detailmonitor" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ui/core/coreaddon.xsd">
   <environment type="detailmonitor">
     <file name="ui/addons/uf_detailmonitor/menu_productsales_slider.lua" />
+    <file name="ui/addons/uf_detailmonitor/menu_smallshiptrader_drones.lua" />
     <dependency name="ego_detailmonitor" />
   </environment>
 </addon>

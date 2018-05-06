@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mdscript name="UF_NPC_Shiptrader_Small" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
 
-<cues>
+  <cues>
 
-  <library name="PilotSetSkills">
-    <actions>
-      <debug_text text="'Pro pilot? - ' + @event.param2.{6}" />
-      <do_if value="@event.param2.{6}" exact="0" negate="true">
-        <debug_text text="'Pro pilot hired: ' + $spawnedship.pilot.name + ' (' + $i + ')'" />
-        <set_skill entity="$spawnedship.pilot" type="skilltype.navigation" min="3" max="4" />
-        <set_skill entity="$spawnedship.pilot" type="skilltype.combat" exact="4" />
-        <set_skill entity="$spawnedship.pilot" type="skilltype.morale" min="3" max="4" />
-      </do_if>
-      <do_else>
-        <debug_text text="'Regular pilot hired: ' + $spawnedship.pilot.name + ' (' + $i + ')'" />
-      </do_else>
-    </actions>
-  </library>
-</cues>
+    <library name="PilotSetSkills">
+      <actions>
+        <do_if value="@event.param2.{6}" exact="0" negate="true">
+          <debug_text text="'Pro pilot hired: ' + $spawnedship.pilot.name + ' (' + $i + ')'" filter="scripts_verbose" />
+          <!-- TODO Set to 4 for combat for fighters only. Economy ships should get lower combat and probably better navigation. -->
+          <set_skill entity="$spawnedship.pilot" type="skilltype.navigation" min="3" max="4" />
+          <set_skill entity="$spawnedship.pilot" type="skilltype.combat" exact="4" />
+          <set_skill entity="$spawnedship.pilot" type="skilltype.morale" min="3" max="4" />
+        </do_if>
+        <do_else>
+          <debug_text text="'Regular pilot hired: ' + $spawnedship.pilot.name + ' (' + $i + ')'" filter="scripts_verbose" />
+        </do_else>
+      </actions>
+    </library>
+
+  </cues>
 
 </mdscript>

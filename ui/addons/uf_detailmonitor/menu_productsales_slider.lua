@@ -43,7 +43,7 @@ function menu.buttonOK()
 	value1, value2, value3, value4 = GetSliderValue(menu.slider)
 
 	if menu.unitspace > 0 then
-		Helper.closeMenuForSubSection(menu, false, "cSmallshiptrader_selectdrones", { 0, 0, menu.entity, menu.ware, nil, value1 })
+		Helper.closeMenuForSubSection(menu, false, "cSmallshiptrader_selectdrones", { 0, 0, menu.entity, menu.ware, nil, value1, menu.pilot_pro_hire, menu.pilot_pro_price })
 	else
 		local playerMoney = GetPlayerMoney()
 		local unitprice = GetContainerWarePrice(menu.container, menu.ware, false)
@@ -67,9 +67,10 @@ function menu.onShowMenu()
 	menu.container = GetContextByClass(menu.entity, "container")
 	menu.ware = menu.param[4]
 	menu.unitspace = GetMacroUnitStorageCapacity(GetWareData(menu.ware, "component"), "", 0, false)
-	-- TODO Get price from config.
+	-- TODO Get price from some sort of configuration storage?
+	--		Or better yet, make it a percentage.
 	menu.pilot_pro_price = 250000
-	-- TODO Get config / remember settings.
+	-- TODO Remember setting?
 	menu.pilot_pro_hire = false
 
 	-- Title line as one TableView
@@ -151,7 +152,7 @@ function menu.onShowMenu()
 		Helper.getEmptyCellDescriptor()
 	}, nil, nil, false, menu.transparent)
 
-	local buttondesc = setup:createCustomWidthTable({48, 150, 48, 150, 0, 150, 48, 150, 48}, false, false, true, 2, 4, 0, 440, 0, false)
+	local buttondesc = setup:createCustomWidthTable({48, 150, 48, 150, 0, 150, 48, 150, 48}, false, false, true, 2, 5, 0, 440, 0, false)
 	
 	-- create tableview
 	menu.selecttable, menu.buttontable, menu.slider = Helper.displayTwoTableSliderView(menu, selectdesc, buttondesc, sliderdesc, false)

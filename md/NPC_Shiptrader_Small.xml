@@ -1,11 +1,14 @@
-<?xml version="1.0" encoding="iso-8859-1" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <diff>
-  <add sel="/mdscript/cues/cue[@name='Base']/cues/cue[@name='SectionHandler']/actions/do_elseif/do_if[@value='@$rawdocks.count']/do_all[@exact='$amount' and @counter='$i']/do_if[@value='$spawnedship.exists']">
+  <replace sel="/mdscript/cues/cue[@name='Base']/cues/cue[@name='SectionHandler']/actions/do_elseif[contains(@value, 'cSmallshiptrader_selectdrones')]/open_conversation_menu[@menu='SmallShipTraderDronesMenu']/@menu">UF_SmallShipTraderDronesMenu</replace>
+
+  <replace sel="/mdscript/cues/cue[@name='Base']/cues/cue[@name='SectionHandler']/actions/do_elseif[contains(@value, 'cSmallshiptrader_selectamount')]/open_conversation_menu[@menu='ProductSalesSliderMenu']/@menu">UF_ProductSalesSliderMenu</replace>
+
+  <!--
+    The lib "ApplyDroneplan" is using the same loop counter variable name ($i) as the parent seems to remove it from the parent scope.
+    One solution is to insert our code before the droneplan application one.
+  -->
+  <add pos="before" sel="/mdscript/cues/cue[@name='Base']/cues/cue[@name='SectionHandler']/actions/do_elseif[contains(@value, 'cSmallshiptrader_spawnships')]/do_if[@value='@$rawdocks.count']/do_all[@exact='$amount' and @counter='$i']/do_if[@value='$spawnedship.exists']/do_if[@value='$droneplan']">
     <include_actions ref="md.UF_NPC_Shiptrader_Small.PilotSetSkills" />
   </add>
-
-  <replace sel="/mdscript/cues/cue[@name='Base']/cues/cue[@name='SectionHandler']/actions/do_elseif/open_conversation_menu[@menu='ProductSalesSliderMenu']">
-    <open_conversation_menu menu="UF_ProductSalesSliderMenu" param="event.param2" param2="event.param3" />
-  </replace>
-
 </diff>
